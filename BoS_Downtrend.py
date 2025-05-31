@@ -3,7 +3,7 @@ from tqsdk import TqApi, TqAuth, tafunc
 from MyTT import MACD
 from utils import isPivot, detect_macd_divergen, check_prev_pivot_point
 
-# ½»Ò×²ÎÊı
+# äº¤æ˜“å‚æ•°
 max_loss_per_trade = 1000
 wait_windows = 30
 
@@ -21,7 +21,7 @@ def find_entry(bos_down, product_info, df, row, current_datetime, product_multip
 
         is_macd_divergence = False
         for entry in bos_down['entries']:
-            # FVGµÄÊ§ºâÇøÊ±£¬KÏß±ØĞëÔÚFVGµÄºóÁ½¸ù
+            # FVGçš„å¤±è¡¡åŒºæ—¶ï¼ŒKçº¿å¿…é¡»åœ¨FVGçš„åä¸¤æ ¹
             if entry['type'] == 'fvg':
                 fvg_index = df.loc[df.datetime == entry['datetime']].index.values[0]
                 if row['index'] - fvg_index < 2:
@@ -49,7 +49,7 @@ def find_entry(bos_down, product_info, df, row, current_datetime, product_multip
                 else:
                     take_profit = df.loc[min_index].close
 
-            # ¼ÆËãÓ¯¿÷±ÈÊÇ·ñÔÚ2ÒÔÉÏ
+            # è®¡ç®—ç›ˆäºæ¯”æ˜¯å¦åœ¨2ä»¥ä¸Š
             profit_factor = 0
             if row['close'] != stop_loss:
                 profit_factor = round((take_profit - row['close']) / (row['close'] - stop_loss), 1)
@@ -176,7 +176,7 @@ def detect_BoS_Downtrend(api, logging, product_info, db):
                         if sub_row['FVG'] == -1:
                             fvg_idxs.append(index)
 
-                    # ÕÒµ½ºÏÊÊµÄOB
+                    # æ‰¾åˆ°åˆé€‚çš„OB
                     obs = [x for x in ob_idxs if idxhighs[1] <= x <= break_index]
                     obs_entry = []
                     if len(obs):
@@ -187,7 +187,7 @@ def detect_BoS_Downtrend(api, logging, product_info, db):
                             'type': 'ob',
                         })
 
-                    # ÕÒµ½ºÏÊÊµÄFVG
+                    # æ‰¾åˆ°åˆé€‚çš„FVG
                     fvgs = [x for x in fvg_idxs if idxhighs[1] <= x <= break_index + 2]
                     fvgs_entry = []
                     if len(fvgs):
@@ -199,7 +199,7 @@ def detect_BoS_Downtrend(api, logging, product_info, db):
                                 'type': 'fvg',
                             })
 
-                    # Ã»ÓĞOB£¬ÓÃhigh1À´µ±OB
+                    # æ²¡æœ‰OBï¼Œç”¨high1æ¥å½“OB
                     if not len(obs):
                         obs_entry.append({
                             'upper_range': df.loc[idxhighs[-1]].high,
@@ -222,7 +222,7 @@ def detect_BoS_Downtrend(api, logging, product_info, db):
                             'product': product_info['product']
                         }
 
-        # µ±Ç°Ê±¼ä¸úÍ»ÆÆKÏà¾à²»³¬¹ı30¸öKÏß
+        # å½“å‰æ—¶é—´è·Ÿçªç ´Kç›¸è·ä¸è¶…è¿‡30ä¸ªKçº¿
         if bos_down:
             find_entry(bos_down, product_info, df, row, current_datetime, product_multiplier, logging)
 
@@ -234,7 +234,7 @@ def detect_BoS_Downtrend(api, logging, product_info, db):
                 bos_down['detect_datetime'] = current_datetime
                 db.insert('bos_downtrend', bos_down)
         else:
-            # ¶ÁÈ¡´æ´¢µÄ½á¹¹£¬µ«Ö»ÓÃwindowÄÚµÄÊı¾İ
+            # è¯»å–å­˜å‚¨çš„ç»“æ„ï¼Œä½†åªç”¨windowå†…çš„æ•°æ®
             look_back_datetime = df.iloc[-wait_windows].datetime
             bos_downs = db.find_by_condition('bos_downtrend', {
                 'product': product_info['product'],

@@ -4,7 +4,7 @@ import json
 from MyTT import MACD
 from utils import isPivot, detect_macd_divergen, check_prev_pivot_point
 
-# 交易参数
+# 浜ゆ槗鍙傛暟
 max_loss_per_trade = 1000
 wait_windows = 30
 
@@ -41,7 +41,7 @@ def find_entry(bos_up, product_info, df, row, current_datetime, product_multipli
 
         is_macd_divergence = False
         for entry in bos_up['entries']:
-            # FVG的失衡区时，K线必须在FVG的后两根
+            # FVG鐨勫け琛″尯鏃讹紝K绾垮繀椤诲湪FVG鐨勫悗涓ゆ牴
             if entry['type'] == 'fvg':
                 fvg_index = df.loc[df.datetime == entry['datetime']].index.values[0]
                 if row['index'] - fvg_index < 2:
@@ -69,7 +69,7 @@ def find_entry(bos_up, product_info, df, row, current_datetime, product_multipli
                 else:
                     take_profit = df.loc[max_index].open
 
-            # 计算盈亏比是否在2以上
+            # 璁＄畻鐩堜簭姣旀槸鍚﹀湪2浠ヤ笂
             profit_factor = 0
             if row['close'] != stop_loss:
                 profit_factor = round((take_profit - row['close']) / (row['close'] - stop_loss), 1)
@@ -197,7 +197,7 @@ def detect_BoS_Uptrend(api, logging, product_info, db):
                         if sub_row['FVG'] == 1:
                             fvg_idxs.append(index)
 
-                    # 找到合适的OB
+                    # 鎵惧埌鍚堥�傜殑OB
                     obs = [x for x in ob_idxs if idxlows[1] <= x <= break_index]
                     obs_entry = []
                     if len(obs):
@@ -208,7 +208,7 @@ def detect_BoS_Uptrend(api, logging, product_info, db):
                             'type': 'ob',
                         })
 
-                    # 找到合适的FVG
+                    # 鎵惧埌鍚堥�傜殑FVG
                     fvgs = [x for x in fvg_idxs if idxlows[1] <= x <= break_index + 2]
                     fvgs_entry = []
                     if len(fvgs):
@@ -220,7 +220,7 @@ def detect_BoS_Uptrend(api, logging, product_info, db):
                                 'type': 'fvg',
                             })
 
-                    # 没有OB，用low1来当OB
+                    # 娌℃湁OB锛岀敤low1鏉ュ綋OB
                     if not len(obs):
                         obs_entry.append({
                             'upper_range': df.loc[idxlows[-1]].high,
@@ -255,7 +255,7 @@ def detect_BoS_Uptrend(api, logging, product_info, db):
                 db.insert('bos_uptrend', bos_up)
 
         else:
-            # 读取存储的结构，但只用window内的数据
+            # 璇诲彇瀛樺偍鐨勭粨鏋勶紝浣嗗彧鐢╳indow鍐呯殑鏁版嵁
             look_back_datetime = df.iloc[-wait_windows].datetime
             bos_ups = db.find_by_condition('bos_uptrend', {
                 'product': product_info['product'],
