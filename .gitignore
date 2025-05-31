@@ -9,3 +9,5 @@ BoS_Uptrend_test.py
 venv/
 
 .idea/
+
+__pycache__/
