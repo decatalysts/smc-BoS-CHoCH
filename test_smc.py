@@ -16,8 +16,8 @@ def main():
             end_dt=date(2025, 5, 15),
         ),
         auth=TqAuth(
-            os.getenv('TQ_ACC_USERNAME'),
-            os.getenv('TQ_ACC_PASSWORD'),
+            os.getenv('TQSDK_ACCOUNT'),
+            os.getenv('TQSDK_PASSWORD'),
         ),
     )
 
