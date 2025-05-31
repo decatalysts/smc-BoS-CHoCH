@@ -2,4 +2,12 @@
 /daily review
 /market structures
 BoS_Uptrend_test.py
+
+.env
+
+.venv/
+venv/
+
+.idea/
+
 __pycache__/
